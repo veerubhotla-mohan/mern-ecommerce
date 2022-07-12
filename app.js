@@ -8,6 +8,7 @@ const expressValidator = require('express-validator');
 
 dotenv.config({path: './.env'})
 
+const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -20,7 +21,8 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(expressValidator())
 
-app.use('/api', userRoutes);
+app.use('/api', authRoutes);
+app.use('/api', userRoutes)
 
 const port = process.env.PORT || 7000;
 app.listen(port, () => {
