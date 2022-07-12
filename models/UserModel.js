@@ -1,23 +1,26 @@
 const  mongoose  = require("mongoose");
 const crypto = require('crypto')
 const { v4: uuidv4 } = require('uuid');
+const validator = require('validator');
+
 const userSchema = mongoose.Schema({
     name:{
         type: String,
         trim: true,
-        required: true,
+        required: [true, "Name field is required"],
         maxlength: 32
     },
     email:{
         type: String,
         trim: true,
-        required: true,
-        unique:true
+        required: [true, "Email field is missing"],
+        unique: true,
+        validate: [validator.isEmail, "Given email is not valid"]
     },
     hashedPassword:{
         type: String,
-        required: true,
-        select: false
+        required: [true, "Password field is required"],
+        minlength: 6,
     },
     about:{
         type: String,
@@ -47,6 +50,9 @@ userSchema.virtual('password').set(function(password) {
 })
 
 userSchema.methods = {
+    authenticateUser: function(plainPassword){
+        return this.encryptPassword(plainPassword) === this.hashedPassword
+    },
     encryptPassword: function(password){
         if(!password) return '';
         try{

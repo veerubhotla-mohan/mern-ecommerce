@@ -12,7 +12,7 @@ const userRoutes = require('./routes/userRoutes');
 
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
-}).then(() => console.log("DB Connected Successfully"))
+}).then(() => console.log("DB Connected Successfully")).catch(err => console.log(err))
 
 const app = express() 
 app.use(morgan('dev'))
